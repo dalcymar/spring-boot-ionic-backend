@@ -49,8 +49,7 @@ public class CursomcApplication implements CommandLineRunner {
 		
 			cat2.getProdutos().add(p2);
 		*/
-		
-		
+			
 		//produtos
 		p1.getCategorias().addAll(Arrays.asList(cat1));
 		p2.getCategorias().addAll(Arrays.asList(cat1, cat2));
@@ -64,7 +63,5 @@ public class CursomcApplication implements CommandLineRunner {
 		produtoRepository.save(p1);
 		produtoRepository.save(p2);
 		produtoRepository.save(p3);
-	}
-
-	
+	}	
 }
