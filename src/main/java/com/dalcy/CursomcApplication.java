@@ -9,10 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.dalcy.domain.Categoria;
 import com.dalcy.domain.Cidade;
+import com.dalcy.domain.Cliente;
+import com.dalcy.domain.Endereco;
 import com.dalcy.domain.Estado;
 import com.dalcy.domain.Produto;
+import com.dalcy.domain.enums.TipoCliente;
 import com.dalcy.repositories.CategoriaRepository;
 import com.dalcy.repositories.CidadeRepository;
+import com.dalcy.repositories.ClienteRepository;
+import com.dalcy.repositories.EnderecoRepository;
 import com.dalcy.repositories.EstadoRepository;
 import com.dalcy.repositories.ProdutoRepository;
 
@@ -30,6 +35,12 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -95,5 +106,23 @@ public class CursomcApplication implements CommandLineRunner {
 		cidadeRepository.save(c1);
 		cidadeRepository.save(c2);
 		cidadeRepository.save(c3);
+		
+		//Instanciando o Cliente usando as prioridades
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
+		
+		cli1.getTelefones().addAll(Arrays.asList("27363323","93838393"));
+		
+		//Instanciando o Endereço usando a ordem de prioridades
+		Endereco e1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cli1, c1);
+		Endereco e2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, c2);
+		
+		//cliente conhecendo os endereços
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+		
+		clienteRepository.save(cli1);
+		
+		enderecoRepository.save(e1);
+		enderecoRepository.save(e2);
+		
 	}	
 }
