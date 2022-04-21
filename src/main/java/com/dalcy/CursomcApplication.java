@@ -1,5 +1,6 @@
 package com.dalcy;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +13,20 @@ import com.dalcy.domain.Cidade;
 import com.dalcy.domain.Cliente;
 import com.dalcy.domain.Endereco;
 import com.dalcy.domain.Estado;
+import com.dalcy.domain.Pagamento;
+import com.dalcy.domain.PagamentoComBoleto;
+import com.dalcy.domain.PagamentoComCartao;
+import com.dalcy.domain.Pedido;
 import com.dalcy.domain.Produto;
+import com.dalcy.domain.enums.EstadoPagamento;
 import com.dalcy.domain.enums.TipoCliente;
 import com.dalcy.repositories.CategoriaRepository;
 import com.dalcy.repositories.CidadeRepository;
 import com.dalcy.repositories.ClienteRepository;
 import com.dalcy.repositories.EnderecoRepository;
 import com.dalcy.repositories.EstadoRepository;
+import com.dalcy.repositories.PagamentoRepository;
+import com.dalcy.repositories.PedidoRepository;
 import com.dalcy.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -124,5 +138,29 @@ public class CursomcApplication implements CommandLineRunner {
 		enderecoRepository.save(e1);
 		enderecoRepository.save(e2);
 		
+		//Relacionado ao instante do pedido
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
+		//Gerando os pedidos (instaciar)
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2021 11:13"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("20/11/2021 11:13"), cli1, e2);
+		
+		//Gerando os pagamento (instaciar)
+		Pagamento pagto1 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("22/10/2021 00:00"), null);
+		ped2.setPagamento(pagto2);
+		
+		//Associando os clientes aos pedidos
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+		
+		//Save pedido
+		pedidoRepository.save(ped1);
+		pedidoRepository.save(ped2);
+		
+		// Save pagamento
+		pagamentoRepository.save(pagto1);
+		pagamentoRepository.save(pagto2);
 	}	
 }
