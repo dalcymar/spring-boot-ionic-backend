@@ -13,6 +13,7 @@ import com.dalcy.domain.Cidade;
 import com.dalcy.domain.Cliente;
 import com.dalcy.domain.Endereco;
 import com.dalcy.domain.Estado;
+import com.dalcy.domain.ItemPedido;
 import com.dalcy.domain.Pagamento;
 import com.dalcy.domain.PagamentoComBoleto;
 import com.dalcy.domain.PagamentoComCartao;
@@ -25,6 +26,7 @@ import com.dalcy.repositories.CidadeRepository;
 import com.dalcy.repositories.ClienteRepository;
 import com.dalcy.repositories.EnderecoRepository;
 import com.dalcy.repositories.EstadoRepository;
+import com.dalcy.repositories.ItemPedidoRepository;
 import com.dalcy.repositories.PagamentoRepository;
 import com.dalcy.repositories.PedidoRepository;
 import com.dalcy.repositories.ProdutoRepository;
@@ -55,6 +57,9 @@ public class CursomcApplication implements CommandLineRunner {
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -162,5 +167,23 @@ public class CursomcApplication implements CommandLineRunner {
 		// Save pagamento
 		pagamentoRepository.save(pagto1);
 		pagamentoRepository.save(pagto2);
+		
+		//Itens de Pedidos
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+		
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+		
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+		
+		//savando no bd
+		itemPedidoRepository.save(ip1);
+		itemPedidoRepository.save(ip2);
+		itemPedidoRepository.save(ip3);
+		
 	}	
 }
