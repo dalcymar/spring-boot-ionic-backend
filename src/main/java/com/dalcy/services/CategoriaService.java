@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.dalcy.domain.Categoria;
+import com.dalcy.dto.CategoriaDTO;
 import com.dalcy.repositories.CategoriaRepository;
 import com.dalcy.services.exceptions.DataIntegrityException;
 import com.dalcy.services.exceptions.ObjectNotFoundException;
@@ -65,5 +66,10 @@ public class CategoriaService {
 	public Page<Categoria> findPage(Integer page, Integer linesPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
+	}
+	
+	// usando validacao
+	public Categoria fromDTO(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
 	}
 }
